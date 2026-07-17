@@ -18,6 +18,7 @@ add_executable(md
     src/inline_parser.cpp
     src/block_parser.cpp
     src/renderer.cpp
+    src/highlight.cpp
     src/terminal.cpp)
 
 target_include_directories(md PRIVATE src)

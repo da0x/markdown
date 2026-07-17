@@ -15,7 +15,9 @@ Written in modern C++ (C++23), no third-party libraries.
   hyperlinks (falling back to `text (url)` when piped)
 - **Lists**: ordered, unordered, nested, and `- [ ]` / `- [x]` task lists
 - **Blockquotes**, including nested ones, with a colored bar
-- **Fenced code blocks** with a gutter and language label (content never wrapped)
+- **Fenced code blocks** with a gutter, language label, and **syntax
+  highlighting** for C, C++, Python, JavaScript/TypeScript, Rust, Go, shell, and
+  JSON (unknown languages still get string/number highlighting)
 - **GFM tables** with box-drawing borders, per-column alignment, and correct
   display-width measurement for CJK/emoji — wide tables shrink to fit
 - **Word-wrapping** to the terminal width, ANSI-aware so styles never leak
@@ -75,6 +77,7 @@ md test/sample.md            # a feature showcase
 | `src/ast.hpp` | Inline and block node definitions |
 | `src/inline_parser.*` | Emphasis, code, links, images, autolinks |
 | `src/block_parser.*` | Headings, lists, quotes, code, tables, paragraphs |
+| `src/highlight.*` | Syntax highlighting for fenced code blocks |
 | `src/table.hpp` | Box-drawn tables (style-as-data, alignment, shrink) |
 | `src/renderer.*` | AST → ANSI, word-wrapping, line prefixing |
 | `src/terminal.*` | Terminal width and TTY detection |

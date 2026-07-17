@@ -35,7 +35,7 @@ Task list:
 
 - [x] Parse blocks
 - [x] Render tables
-- [ ] Add syntax highlighting
+- [x] Syntax-highlight code blocks
 - [ ] Conquer the world
 
 ## Blockquotes
@@ -49,14 +49,31 @@ Task list:
 
 ## Code
 
-Fenced code preserves formatting and shows the language label:
+Fenced code preserves formatting, shows the language label, and is
+syntax-highlighted based on the fence's language:
 
 ```cpp
 #include <print>
 int main() {
-    std::println("Hello, Markdown!");
+    auto msg = "Hello, Markdown!";  // greeting
+    std::println("{}", msg);
     return 0;  // no wrapping inside code blocks
 }
+```
+
+```python
+def fib(n: int) -> int:
+    """Return the nth Fibonacci number."""
+    a, b = 0, 1
+    for _ in range(n):        # iterate n times
+        a, b = b, a + b
+    return a
+```
+
+```bash
+# build and install
+make && sudo make install
+md README.md | less -R
 ```
 
 ## Tables

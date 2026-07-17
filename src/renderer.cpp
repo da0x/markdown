@@ -7,10 +7,12 @@
 #include "renderer.hpp"
 
 #include <algorithm>
+#include <cctype>
 #include <string>
 #include <vector>
 
 #include "ansi.hpp"
+#include "highlight.hpp"
 #include "table.hpp"
 #include "text_util.hpp"
 #include "unicode.hpp"
@@ -272,9 +274,18 @@ std::string render_code_block(const BlockNode& b) {
     // split() of a trailing-newline-free literal is fine; drop a lone trailing
     // empty line that a final newline would produce.
     if (lines.size() > 1 && lines.back().empty()) lines.pop_back();
-    for (std::size_t i = 0; i < lines.size(); ++i) {
+
+    // The info string's first word is the language; highlight against it.
+    std::string lang;
+    for (char c : b.info) {
+        if (c == ' ' || c == '\t') break;
+        lang += static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
+    }
+    std::vector<std::string> hl = highlight_code(lines, lang);
+
+    for (std::size_t i = 0; i < hl.size(); ++i) {
         if (i) out += "\n";
-        out += bar + lines[i];
+        out += bar + hl[i];
     }
     return out;
 }
