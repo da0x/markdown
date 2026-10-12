@@ -13,21 +13,25 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
 endif()
 
-add_executable(md
-    src/main.cpp
-    src/inline_parser.cpp
-    src/block_parser.cpp
-    src/renderer.cpp
-    src/highlight.cpp
-    src/terminal.cpp)
-
-target_include_directories(md PRIVATE src)
-
-target_compile_options(md PRIVATE
-    -Wall -Wextra -Wpedantic
-    # Partial designated-initializers (aggregate {.kind = ...}) are intentional;
-    # the rest of BlockNode's members correctly value-initialize.
-    -Wno-missing-field-initializers)
-
 include(GNUInstallDirs)
+
+# libmarkdown: one header, nothing to compile.
+add_library(markdown INTERFACE)
+target_include_directories(markdown INTERFACE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+target_compile_features(markdown INTERFACE cxx_std_23)
+
+add_executable(md src/main.cpp)
+target_link_libraries(md PRIVATE markdown)
+target_compile_options(md PRIVATE -Wall -Wextra -Wpedantic)
+
+enable_testing()
+add_executable(layout_test test/layout_test.cpp)
+target_link_libraries(layout_test PRIVATE markdown)
+target_compile_options(layout_test PRIVATE -Wall -Wextra -Wpedantic)
+add_test(NAME layout
+    COMMAND layout_test ${CMAKE_CURRENT_SOURCE_DIR}/test/sample.md)
+
 install(TARGETS md RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(FILES include/markdown.hpp DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
