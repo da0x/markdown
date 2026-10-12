@@ -968,6 +968,24 @@ inline std::vector<block_node> parse_document(std::string_view source) {
     return parser.parse(0, lines.size());
 }
 
+}  // namespace detail
+
+// ---- The document as a tree -----------------------------------------------
+//
+// For a program that lays Markdown out itself, as a window does by pixels: the
+// blocks a document holds, each with its inline content, styled spans nesting.
+// It's the tree layout() is made from.
+using detail::alignment;
+using detail::block_kind;
+using detail::block_node;
+using detail::inline_kind;
+using detail::inline_node;
+
+// The top-level blocks of a document.
+inline std::vector<block_node> parse(std::string_view source) { return detail::parse_document(source); }
+
+namespace detail {
+
 // ---- Building rows ---------------------------------------------------------
 
 // Add `text` in `look` to the end of `row`. Plain text joins a plain run before
